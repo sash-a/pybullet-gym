@@ -18,6 +18,10 @@ class Ant(WalkerBase, MJCFBasedRobot):
         velocity = self.parts['torso'].get_velocity()
         qvel = np.hstack((velocity[0], velocity[1], [j.get_velocity() for j in self.ordered_joints])).flatten()  # shape (14,)
 
+        for joint in self.ordered_joints:
+            state = self._p.getJointState(self.objects[0], joint.jointIndex)[2]
+            print(state)
+        
         cfrc_ext = np.zeros((14, 6))  # shape (14, 6)  # TODO: FIND cfrc_ext
         return np.concatenate([
             qpos.flat[2:],                   # self.sim.data.qpos.flat[2:],

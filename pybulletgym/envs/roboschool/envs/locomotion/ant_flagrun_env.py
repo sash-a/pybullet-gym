@@ -1,17 +1,16 @@
 from typing import Tuple
 
 import numpy as np
+from pybullet_envs.gym_locomotion_envs import AntBulletEnv, WalkerBaseBulletEnv
+
 from pybulletgym.envs import gym_utils as ObjectHelper
-from pybulletgym.envs.roboschool.envs.locomotion.ant_env import AntBulletEnv
 
 
 class AntFlagrunBulletEnv(AntBulletEnv):
-    def __init__(self, size=7, tolerance=0.5, max_targets=10, manual_goal_creation=False, seed=123):
+    def __init__(self, size=5, tolerance=0.5, max_targets=10, manual_goal_creation=False, seed=123):
         super().__init__()
         self.size = size
         self.manual_goal_creation = manual_goal_creation
-        self.robot.electricity_cost = 0  # -2.0
-        self.robot.stall_torque_cost = 0  # -0.1
         self.tol = tolerance
         self.max_targets = max_targets
 
@@ -55,6 +54,9 @@ class AntFlagrunBulletEnv(AntBulletEnv):
                                                     [0, 0, 0, 1])
 
     def reset(self):
+        WalkerBaseBulletEnv.electricity_cost = 0  # -2.0
+        WalkerBaseBulletEnv.stall_torque_cost = 0  # -0.1
+
         r = super().reset()
 
         self.goals.clear()
@@ -69,7 +71,7 @@ class AntFlagrunBulletEnv(AntBulletEnv):
 
         # If close enough to target then give extra reward and move the target.
         if np.linalg.norm(self.robot.body_xyz[:2] - np.array([self.walk_target_x, self.walk_target_y])) < self.tol:
-            r += 1000
+            r += 5000
             try:
                 self.set_target(*self.goals.pop())
                 i['target'] = [self.walk_target_x, self.walk_target_y]

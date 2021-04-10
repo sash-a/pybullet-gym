@@ -6,7 +6,7 @@ from pybulletgym.envs.roboschool.envs.locomotion.ant_env import AntBulletEnv
 
 
 class AntFlagrunBulletEnv(AntBulletEnv):
-    def __init__(self, size=3, tolerance=0.5, max_targets=10, manual_goal_creation=False, seed=123):
+    def __init__(self, size=7, tolerance=0.5, max_targets=10, manual_goal_creation=False, seed=123):
         super().__init__()
         self.size = size
         self.manual_goal_creation = manual_goal_creation
@@ -72,6 +72,7 @@ class AntFlagrunBulletEnv(AntBulletEnv):
             r += 1000
             try:
                 self.set_target(*self.goals.pop())
+                i['target'] = [self.walk_target_x, self.walk_target_y]
             except IndexError:
                 print('Reached all goals!')
                 d = True
